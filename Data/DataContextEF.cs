@@ -24,7 +24,7 @@ namespace HelloWorld.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) //maps models into actual sql tables
         {
-            modelBuilder.HasDefaultSchema("TutorialAppSchema"); //search inside this schema
+            modelBuilder.HasDefaultSchema("tutorialSchema"); //search inside this schema
 
             modelBuilder.Entity<Computer>().HasKey(c => c.ComputerId); //HasKey defines the primary key, otherwise use HasNoKey()
                 // .ToTable("TableName", "SchemaName"); search "TableName", in "SchemaName", not in the default one

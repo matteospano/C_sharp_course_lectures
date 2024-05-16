@@ -1,13 +1,13 @@
-CREATE DATABASE DotNetCourseDatabase
+CREATE DATABASE prova
 GO
 
-USE DotNetCourseDatabase
+USE prova
 GO
 
-CREATE SCHEMA TutorialAppSchema
+CREATE SCHEMA tutorialSchema
 GO
 
-CREATE TABLE TutorialAppSchema.Computer(
+CREATE TABLE tutorialSchema.Computer(
 	ComputerId INT IDENTITY(1,1) PRIMARY KEY,
 	Motherboard NVARCHAR(50),
 	CPUCores INT,

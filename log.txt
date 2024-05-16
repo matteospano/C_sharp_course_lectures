@@ -1,0 +1,3 @@
+Dapper:
+'ComputerId','Motherboard','HasWifi','HasLTE','ReleaseDate','Price','VideoCard'
+'1','Z690','True','False','2024-05-16','943.87','RTX 2060'

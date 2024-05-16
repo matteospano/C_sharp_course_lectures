@@ -38,7 +38,7 @@ namespace HelloWorld
             // entityFramework.Add(myComputer);
             // entityFramework.SaveChanges();
 
-            string sql = @"INSERT INTO TutorialAppSchema.Computer (
+            string sql = @"INSERT INTO tutorialSchema.Computer (
                 Motherboard,
                 HasWifi,
                 HasLTE,
@@ -65,7 +65,7 @@ namespace HelloWorld
                 Computer.ReleaseDate,
                 Computer.Price,
                 Computer.VideoCard
-             FROM TutorialAppSchema.Computer";
+             FROM tutorialSchema.Computer";
 
             IEnumerable<Computer> computers = dapper.LoadData<Computer>(sqlSelect);
 
