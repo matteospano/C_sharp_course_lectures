@@ -14,6 +14,8 @@
     <PackageReference Include="microsoft.entityframeworkcore.sqlserver" Version="8.0.5" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.JSON" Version="8.0.0" />
+    <!-- aggiungi a mano per includere il file appsettings -->
+    <None Update="appsettings.json"><CopyToOutputDirectory>Always</CopyToOutputDirectory></None>
   </ItemGroup>
 
 </Project>
