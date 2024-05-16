@@ -14,8 +14,9 @@ namespace HelloWorld
     {
         static void Main(string[] args)
         {
-            DataContextDapper dapper = new DataContextDapper();
-            DataContextEF entityFramework = new DataContextEF();
+            IConfiguration config = new ConfigurationBuilder().AddJsonFile("appSettings.json").Build();
+            DataContextDapper dapper = new DataContextDapper(config);
+            DataContextEF entityFramework = new DataContextEF(config);
 
             DateTime rightNow = dapper.LoadDataSingle<DateTime>("SELECT GETDATE()");
             // Console.WriteLine(rightNow.ToString());

@@ -15,17 +15,11 @@ namespace HelloWorld.Models
         public Computer()
         {
             if (VideoCard == null)
-            {
                 VideoCard = "";
-            }
             if (Motherboard == null)
-            {
                 Motherboard = "";
-            }
             if (CPUCores == null)
-            {
                 CPUCores = 0;
-            }
         }
     }
 }

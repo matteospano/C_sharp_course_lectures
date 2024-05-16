@@ -8,9 +8,12 @@ namespace HelloWorld.Data
 {
     public class DataContextDapper
     {
-        //linux&Mec: private string _connectionString = "Server=localhost;Database=DotNetCourseDatabase;Trusted_connection=false;TrustServerCertificate=True;User Id=sa;Password=SQLConnect1;";
-        private string _connectionString = "Server=localhost;Database=DotNetCourseDatabase;Trusted_Connection=true;TrustServerCertificate=true;";
-            
+        private string? _connectionString;
+        public DataContextDapper(IConfiguration config)
+        {
+            _connectionString = config.GetConnectionString("DefaultConnection");
+        }
+
         public IEnumerable<T> LoadData<T>(string sql)
         {
             IDbConnection dbConnection = new SqlConnection(_connectionString);
@@ -36,6 +39,6 @@ namespace HelloWorld.Data
             return dbConnection.Execute(sql);
         }
 
-        
+
     }
 }

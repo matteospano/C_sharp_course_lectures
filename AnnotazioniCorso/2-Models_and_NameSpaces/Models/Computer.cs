@@ -16,6 +16,8 @@ namespace HelloWorld.Models{
                 VideoCard = "";
             if (Motherboard == null)
                 Motherboard = "";
+            if (CPUCores == null)
+                CPUCores = 0;
         }
     }
 }
