@@ -1,0 +1,30 @@
+﻿
+namespace HelloWorld4
+{
+    internal class Program
+    {
+        //The main task must be async to be able to await for async functions and methods:  'static async Task Main()'
+        static async Task Main(string[] args)
+        {
+            //The return type of an async method must be a Task, so we must wrap the type in a Task.
+            Task firstTask = ConsoleAfterDelayAsync("Task 1 - 100", 100);
+            //After creating a Task we must also start it with 'myTask.Start()' and wait until it's over with 'await myTask'.
+            firstTask.Start();
+
+            Task secondTask = ConsoleAfterDelayAsync("Task 2 - 150", 150);
+            Task thirdTask = ConsoleAfterDelayAsync("Task 3 - 50", 50);
+
+            //The await keyword is used to wait for the async function to complete before continuing with the rest of the code.
+            await firstTask;
+            Console.WriteLine("After awaiting for 100ms");
+            //We are not await
+        }
+
+        static async Task ConsoleAfterDelayAsync(string text, int delayTime)
+        {
+            await Task.Delay(delayTime);
+            Console.WriteLine(text);
+        }
+
+    }
+}

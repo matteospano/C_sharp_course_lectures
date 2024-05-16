@@ -1,0 +1,14 @@
+per evitare confusioni ho trasformato i vari file .cs relativi ad ogni lezione in txt.
+Ogni versione del codice andrebbe copiata in un nuovo progetto vuoto e ritrascormato il file .cs prima di fare dotnet run
+
+Json:
+/* json file to IEnumerable */
+string computersJson = File.ReadAllText("Computers.json");
+IEnumerable<Computer>? computersNewtonSoft = JsonConvert.DeserializeObject<IEnumerable<Computer>>(computersJson);
+
+/* IEnumerable to json file */
+JsonSerializerSettings settings = new JsonSerializerSettings()
+{ContractResolver = new CamelCasePropertyNamesContractResolver()}; //every label starts with lowercase
+
+string computersCopyNewtonsoft = JsonConvert.SerializeObject(computersNewtonSoft, settings);
+File.WriteAllText(computersCopyNewtonsoft);
