@@ -1,0 +1,71 @@
+﻿using System;
+using System.Text.RegularExpressions;
+
+namespace HelloWorld
+{
+    internal class Program
+    {
+        /* LECTURE 2.24 scope */
+        // dichiarando una variabile fuori da un metodo posso renderla globale a tutti i metodi al suo stesso livello
+        static int Pi_greco = 3;
+        static void Main(string[] args)
+        {
+            /* LECTURE 2.9 variables */
+            // si fa la run da powershel con: dotnet watch run
+
+            //numeri interi
+            int x = -5;
+            uint y = 5; //unsigned, solo positivi
+
+            //numeri decimali eprecisione:
+            float a = 0.333333333333333333f; //=0,33333334
+            double b = 0.33333333333333333;
+            decimal c = 0.3333333333333333m;
+            Console.WriteLine(a); Console.WriteLine(b); Console.WriteLine(c);
+
+            string[] new_array = new string[3]; //fixed size
+            List<string> new_empty_list = new List<string>(); //dinamic size
+            List<string> new_list = new List<string>() { "Apple", "Banana", "Kiwi" };
+            //Console.WriteLine(new_list[25]); //error: out of bounds
+            new_list.Add("Orange");
+            Console.WriteLine(string.Join(", ", new_list)); //Apple, Banana, Kiwi, Orange
+
+            IEnumerable<string> new_ienumerable = new_list; //lista senza indici, si scorre in un forEach
+            Console.WriteLine(new_ienumerable.First()); //Apple
+
+            Dictionary<string, int[]> new_dict = new Dictionary<string, int[]> {{"Apple", new int[]{7,8}},
+            {"Banana",new int[]{9,10}},{"Kiwi",new int[]{12,15}}};
+            Console.WriteLine(string.Join(", ", new_dict["Kiwi"])); //12,15 ricerca solo per chiave, non posso fare new_dict[{9,13}]
+
+            string[,,] new_3d_array = new string[2, 2, 2]; //n dimensioni richiedono n-1 virgole
+
+            /* LECTURE 2.22 loops */
+            int sum = 0;
+            for (int i = 0; i < new_list.Count; i++)
+                sum++;
+            Console.WriteLine(sum);
+
+            sum = 0;
+            foreach (string fruit in new_list) //foreach più efficente e semplice da scrivere
+                sum++;
+            Console.WriteLine(sum);
+
+            Console.WriteLine(sumNumbers([7, 10, 20]));
+
+            /* LECTURE 2.23 methods */
+            static int sumNumbers(int[] numbers)
+            {
+                int sum = 0;
+                foreach (int numb in numbers)
+                    sum += numb;
+                return sum;
+            }
+        }
+
+        static private int printPi()
+        { return Pi_greco; }
+
+        static int doublePi()
+        { return 2 * Pi_greco; }
+    }
+}
