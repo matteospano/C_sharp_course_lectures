@@ -4,7 +4,7 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
-namespace HelloWorld.Data
+namespace HelloWorld3.Data
 {
     public class DataContextDapper
     {

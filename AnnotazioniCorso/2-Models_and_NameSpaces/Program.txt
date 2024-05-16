@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using HelloWorld.Models;
+using HelloWorld2.Models;
 
-namespace HelloWorld
+namespace HelloWorld2
 {
     public class Program
     {

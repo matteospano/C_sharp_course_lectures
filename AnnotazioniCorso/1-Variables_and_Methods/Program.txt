@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace HelloWorld
+namespace HelloWorld1
 {
     internal class Program
     {
@@ -16,6 +16,7 @@ namespace HelloWorld
             //numeri interi
             int x = -5;
             uint y = 5; //unsigned, solo positivi
+            Console.WriteLine(x); Console.WriteLine(y);
 
             //numeri decimali eprecisione:
             float a = 0.333333333333333333f; //=0,33333334

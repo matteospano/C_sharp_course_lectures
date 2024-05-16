@@ -1,9 +1,9 @@
 /* Entity Framework */
-using HelloWorld.Models;
+using HelloWorld3.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace HelloWorld.Data
+namespace HelloWorld3.Data
 {
     public class DataContextEF : DbContext
     {

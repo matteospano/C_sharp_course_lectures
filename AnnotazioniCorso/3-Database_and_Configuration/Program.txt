@@ -3,12 +3,12 @@ using System.Data;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using Dapper;
-using HelloWorld.Data;
-using HelloWorld.Models;
+using HelloWorld3.Data;
+using HelloWorld3.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
-namespace HelloWorld
+namespace HelloWorld3
 {
     internal class Program
     {
@@ -69,11 +69,15 @@ namespace HelloWorld
 
             IEnumerable<Computer> computers = dapper.LoadData<Computer>(sqlSelect);
 
-            Console.WriteLine("'ComputerId','Motherboard','HasWifi','HasLTE','ReleaseDate'"
-                + ",'Price','VideoCard'");
+            /* generare un file di output */
+            //File.WriteAllText("log.txt", "\n" + sql + "\n"); //non fa l'append, ricera il file ogni volta
+            using StreamWriter openFile = new("log.txt", append: true);
+            openFile.WriteLine("Dapper:");
+            openFile.WriteLine("'ComputerId','Motherboard','HasWifi','HasLTE','ReleaseDate'" + ",'Price','VideoCard'");
+
             foreach (Computer singleComputer in computers)
             {
-                Console.WriteLine("'" + singleComputer.ComputerId
+                openFile.WriteLine("'" + singleComputer.ComputerId
                     + "','" + singleComputer.Motherboard
                     + "','" + singleComputer.HasWifi
                     + "','" + singleComputer.HasLTE
@@ -86,11 +90,11 @@ namespace HelloWorld
             // IEnumerable<Computer>? computersEf = entityFramework.Computer?.ToList<Computer>();
             // if (computersEf != null)
             // {
-            //     Console.WriteLine("'ComputerId','Motherboard','HasWifi','HasLTE','ReleaseDate'" 
-            //         + ",'Price','VideoCard'");
+            //     openFile.WriteLine("Entity Framework:");
+            //     openFile.WriteLine("'ComputerId','Motherboard','HasWifi','HasLTE','ReleaseDate'" + ",'Price','VideoCard'");
             //     foreach(Computer singleComputer in computersEf)
             //     {
-            //         Console.WriteLine("'" + singleComputer.ComputerId 
+            //         openFile.WriteLine("'" + singleComputer.ComputerId 
             //             + "','" + singleComputer.Motherboard
             //             + "','" + singleComputer.HasWifi
             //             + "','" + singleComputer.HasLTE
@@ -100,10 +104,7 @@ namespace HelloWorld
             //     }
             // }
 
-            myComputer.HasWifi = false;
-            Console.WriteLine(myComputer.Motherboard);
-            Console.WriteLine(myComputer.HasWifi);
+            openFile.Close();
         }
-
     }
 }
