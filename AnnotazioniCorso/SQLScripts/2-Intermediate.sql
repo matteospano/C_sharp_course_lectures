@@ -65,9 +65,7 @@ SELECT  ISNULL (UserJobInfo.Department, 'Empty Department') AS Deparment
  GROUP BY UserJobInfo.Department --crea una tabella aggregata per ogni distinct Department
  ORDER BY ISNULL (UserJobInfo.Department, 'No Department Listed') DESC;
 
-
-
-
+/*  APPLY: similar to joins, use when no easy join exists and when the right table is an expression or table-valued function */
 SELECT  Users.UserId
         , Users.FirstName + ' ' + Users.LastName AS FullName
         , UserJobInfo.JobTitle
@@ -78,13 +76,12 @@ SELECT  Users.UserId
         , Users.Gender
         , Users.Active
   FROM  TutorialAppSchema.Users AS Users
-      --INNER JOIN
       JOIN TutorialAppSchema.UserSalary AS UserSalary
           ON UserSalary.UserId = Users.UserId
       LEFT JOIN TutorialAppSchema.UserJobInfo AS UserJobInfo
           ON UserJobInfo.UserId = Users.UserId
-      -- OUTER APPLY ( -- Similar to LEFT JOIN
-      CROSS APPLY ( -- Similar to JOIN
+      -- OUTER APPLY ( -- Similar to LEFT JOIN, return results from the left table)
+      CROSS APPLY ( -- Similar to JOIN, return results from the intersection of tables)
                       -- SELECT TOP 1 
                       SELECT    ISNULL (UserJobInfo2.Department, 'No Department Listed') AS Deparment
                                 , AVG (UserSalary2.Salary) AS AvgSalary
@@ -94,52 +91,5 @@ SELECT  Users.UserId
                        WHERE UserJobInfo2.Department = UserJobInfo.Department
                        GROUP BY UserJobInfo2.Department
                   ) AS DepartmentAverage
- WHERE  Users.Active = 1
- ORDER BY Users.UserId DESC;
-
-SELECT  GETDATE ();
-
-SELECT  DATEADD (YEAR, -5, GETDATE ());
-
-SELECT  DATEDIFF (MINUTE, DATEADD (YEAR, -5, GETDATE ()), GETDATE ());  -- Returns Positive
-
-SELECT  DATEDIFF (MINUTE, GETDATE (), DATEADD (YEAR, -5, GETDATE ()));  -- Returns Negative
-
-ALTER TABLE TutorialAppSchema.UserSalary ADD AvgSalary DECIMAL(18, 4);
-
-SELECT  *
-  FROM  TutorialAppSchema.UserSalary;
-
-UPDATE  UserSalary
-   SET  UserSalary.AvgSalary = DepartmentAverage.AvgSalary
-  FROM  TutorialAppSchema.UserSalary AS UserSalary
-      LEFT JOIN TutorialAppSchema.UserJobInfo AS UserJobInfo
-          ON UserJobInfo.UserId = UserSalary.UserId
-      CROSS APPLY ( -- Similar to JOIN
-                      -- SELECT TOP 1 
-                      SELECT    ISNULL (UserJobInfo2.Department, 'No Department Listed') AS Deparment
-                                , AVG (UserSalary2.Salary) AS AvgSalary
-                        FROM    TutorialAppSchema.UserSalary AS UserSalary2
-                            LEFT JOIN TutorialAppSchema.UserJobInfo AS UserJobInfo2
-                                ON UserJobInfo2.UserId = UserSalary2.UserId
-                       WHERE ISNULL (UserJobInfo2.Department, 'No Department Listed') = ISNULL (UserJobInfo.Department, 'No Department Listed')
-                       GROUP BY UserJobInfo2.Department
-                  ) AS DepartmentAverage;
-
-SELECT  Users.UserId
-        , Users.FirstName + ' ' + Users.LastName AS FullName
-        , UserJobInfo.JobTitle
-        , UserJobInfo.Department
-        , UserSalary.AvgSalary
-        , UserSalary.Salary
-        , Users.Email
-        , Users.Gender
-        , Users.Active
-  FROM  TutorialAppSchema.Users AS Users
-      --INNER JOIN
-      JOIN TutorialAppSchema.UserSalary AS UserSalary
-          ON UserSalary.UserId = Users.UserId
-      LEFT JOIN TutorialAppSchema.UserJobInfo AS UserJobInfo
-          ON UserJobInfo.UserId = Users.UserId
  WHERE  Users.Active = 1
  ORDER BY Users.UserId DESC;

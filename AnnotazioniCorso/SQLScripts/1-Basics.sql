@@ -1,4 +1,4 @@
-/* creazione database, schema, tabella, tipo di variabili,SELECT, INSERT, UPDATE, DELETE e TRUNCATE */
+/* creazione database, schema, tabella, tipo di variabili,SELECT, INSERT, UPDATE, ALTER, DELETE e TRUNCATE */
 CREATE DATABASE DotNetCourseDatabase;
 GO
 
@@ -59,13 +59,21 @@ VALUES ('Sample-Motherboard'
         , 1000.28
         , 'Sample-VideoCard');
 
--- DELETE FROM TutorialAppSchema.Computer WHERE ReleaseDate > '2018-10-31'
---When we use BETWEEN we also include the Lower and Upper Bound of the value we're checking
-DELETE  FROM TutorialAppSchema.Computer WHERE  ComputerId BETWEEN 500 AND 1000; --501 Rows affected
-
 UPDATE  TutorialAppSchema.Computer
    SET  Motherboard = 'Obsolete'
  WHERE  HasWifi = 0;
 
+--altera la tabella aggiungendo la colonna <nome tipo> con valori tutti NULL
+ ALTER TABLE TutorialAppSchema.Computer ADD HasDvdReader BIT
+
+ -- DELETE FROM TutorialAppSchema.Computer WHERE ReleaseDate > '2018-10-31'
+--When we use BETWEEN we also include the Lower and Upper Bound of the value we're checking
+DELETE  FROM TutorialAppSchema.Computer WHERE  ComputerId BETWEEN 500 AND 1000; --501 Rows affected
+
 --svuota tabella
 TRUNCATE TABLE TutorialAppSchema.Computer;
+
+/* date functions */
+SELECT  GETDATE (); --return current time of the server
+SELECT  DATEADD (YEAR, -5, GETDATE ()); --add/subtract (type, number, from date)
+SELECT DATEDIFF(YEAR, DATEADD (YEAR, -5, GETDATE ()), GETDATE()) AS yearsOfDifference
