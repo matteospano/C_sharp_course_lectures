@@ -1,3 +1,4 @@
+/* creazione database, schema, tabella, tipo di variabili,SELECT, INSERT, UPDATE, DELETE e TRUNCATE */
 CREATE DATABASE DotNetCourseDatabase;
 GO
 
@@ -59,7 +60,8 @@ VALUES ('Sample-Motherboard'
         , 'Sample-VideoCard');
 
 -- DELETE FROM TutorialAppSchema.Computer WHERE ReleaseDate > '2018-10-31'
-DELETE  FROM TutorialAppSchema.Computer WHERE  ComputerId = 1003;
+--When we use BETWEEN we also include the Lower and Upper Bound of the value we're checking
+DELETE  FROM TutorialAppSchema.Computer WHERE  ComputerId BETWEEN 500 AND 1000; --501 Rows affected
 
 UPDATE  TutorialAppSchema.Computer
    SET  Motherboard = 'Obsolete'

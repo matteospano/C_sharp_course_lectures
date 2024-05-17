@@ -1,15 +1,4 @@
-USE DotNetCourseDatabase;
-GO
-
-SELECT  Users.UserId
-        , Users.FirstName + ' ' + Users.LastName AS FullName
-        , Users.Email
-        , Users.Gender
-        , Users.Active
-  FROM  TutorialAppSchema.Users AS Users
- WHERE  Users.Active = 1
- ORDER BY Users.UserId DESC;
-
+/* JOIN: */
 SELECT  Users.UserId
         , Users.FirstName + ' ' + Users.LastName AS FullName
         , UserJobInfo.JobTitle
@@ -19,7 +8,8 @@ SELECT  Users.UserId
         , Users.Gender
         , Users.Active
   FROM  TutorialAppSchema.Users AS Users
-      --INNER JOIN
+      --JOIN o INNER JOIN lavora solo su righe presenti in entrambe le tabelle
+      --LEFT JOIN mostra tutte le righe della left, se right non ha i campi richiesti la select mostra NULL
       JOIN TutorialAppSchema.UserSalary AS UserSalary
           ON UserSalary.UserId = Users.UserId
       LEFT JOIN TutorialAppSchema.UserJobInfo AS UserJobInfo
@@ -27,85 +17,56 @@ SELECT  Users.UserId
  WHERE  Users.Active = 1
  ORDER BY Users.UserId DESC;
 
--- DELETE FROM TutorialAppSchema.UserSalary WHERE UserId BETWEEN 250 AND 750 --501 Rows
--- --When we use BETWEEN we also include the Lower and Upper Bound of the value we're checking
 SELECT  UserSalary.UserId
         , UserSalary.Salary
   FROM  TutorialAppSchema.UserSalary AS UserSalary
+  --similar to inner join but check if there are rows before returning the table, so it's faster
  WHERE  EXISTS (
                    SELECT   *
                      FROM   TutorialAppSchema.UserJobInfo AS UserJobInfo
                     WHERE   UserJobInfo.UserId = UserSalary.UserId
                )
-        AND UserId <> 7;
+        AND UserId <> 7; --not equal
 
-SELECT  UserId
-        , Salary
-  FROM  TutorialAppSchema.UserSalary
--- UNION --Distinct /*Between the two queries*/
-UNION ALL
-SELECT  UserId
-        , Salary
-  FROM  TutorialAppSchema.UserSalary;
+/* UNION: */
+SELECT  UserId, Salary  FROM  TutorialAppSchema.UserSalary
+-- UNION -- between the two queries di default fa la Distinct (se il doppione era già presente nella prima tab rimane)
+UNION ALL --mostra anche i doppioni
+SELECT  UserId, Salary  FROM  TutorialAppSchema.UserSalary;
 
-SELECT  Users.UserId
-        , Users.FirstName + ' ' + Users.LastName AS FullName
-        , UserJobInfo.JobTitle
-        , UserJobInfo.Department
-        , UserSalary.Salary
-        , Users.Email
-        , Users.Gender
-        , Users.Active
-  FROM  TutorialAppSchema.Users AS Users
-      --INNER JOIN
-      JOIN TutorialAppSchema.UserSalary AS UserSalary
-          ON UserSalary.UserId = Users.UserId
-      LEFT JOIN TutorialAppSchema.UserJobInfo AS UserJobInfo
-          ON UserJobInfo.UserId = Users.UserId
- WHERE  Users.Active = 1
- ORDER BY Users.UserId DESC;
-
+/* CLUSTERED INDEX: */
+--phisically stores data in order of its key, it allows fast search on the successive queries
 CREATE CLUSTERED INDEX cix_UserSalary_UserId
     ON TutorialAppSchema.UserSalary (UserId);
 
-CREATE NONCLUSTERED INDEX ix_UserJobInfo_JobTitle
-    ON TutorialAppSchema.UserJobInfo (JobTitle)
-    INCLUDE (Department);
-
-CREATE NONCLUSTERED INDEX fix_Users_Active
+--CREATE NONCLUSTERED INDEX or CREATE INDEX, create a 'dictionary' of {key, CLUSTERED INDEX},
+--ordered by key, telling us where to search for that row, it allows fast search on the successive queries
+CREATE NONCLUSTERED INDEX ix_Users_Active
     ON TutorialAppSchema.Users (active)
-    INCLUDE (Email, FirstName, LastName) --Also Includes UserId because it is our clustered Index 
-    WHERE active = 1;
+    INCLUDE (Email, FirstName, LastName) --we want to add those fields as well
+    --so there will be [active, Email, FirstName, LastName and UserId]
+    --it includes UserId by default because it is our clustered Index 
+    WHERE active = 1; --we can filter with a where
 
-SELECT  ISNULL (UserJobInfo.Department, 'No Department Listed') AS Deparment
+/*  GROUP BY: */
+SELECT  ISNULL (UserJobInfo.Department, 'Empty Department') AS Deparment
         , SUM (UserSalary.Salary) AS Salary
         , MIN (UserSalary.Salary) AS MinSalary
         , MAX (UserSalary.Salary) AS MaxSalary
         , AVG (UserSalary.Salary) AS AvgSalary
-        , COUNT (*) AS PeopleInDepartment
-        , STRING_AGG (Users.UserId, ', ') AS UserIds
-        -- , STUFF ((
-        --                 SELECT   DISTINCT
-        --                             ', ' + InnerUsers.UserId
-        --                     FROM   TutorialAppSchema.Users AS InnerUsers
-        --                         LEFT JOIN TutorialAppSchema.UserJobInfo AS UserJobInfoInner
-        --                             ON UserJobInfoInner.UserId = InnerUsers.UserId
-        --                     WHERE   UserJobInfoInner.Department = UserJobInfo.Department
-        --                 FOR XML PATH ('')
-        --             )
-        --             , 1
-        --             , 1
-        --             , ''
-        --             ) AS UserIds
+        , COUNT (*) AS PeopleInDepartment --conta quante righe finiranno nella stessa riga nell'aggregato
+        , STRING_AGG (Users.UserId, ', ') AS UserIds --crea una stringa aggregata simile ad un vettore ( '1', '2', '7')
   FROM  TutorialAppSchema.Users AS Users
-      --INNER JOIN
       JOIN TutorialAppSchema.UserSalary AS UserSalary
           ON UserSalary.UserId = Users.UserId
       LEFT JOIN TutorialAppSchema.UserJobInfo AS UserJobInfo
           ON UserJobInfo.UserId = Users.UserId
  WHERE  Users.Active = 1
- GROUP BY UserJobInfo.Department
+ GROUP BY UserJobInfo.Department --crea una tabella aggregata per ogni distinct Department
  ORDER BY ISNULL (UserJobInfo.Department, 'No Department Listed') DESC;
+
+
+
 
 SELECT  Users.UserId
         , Users.FirstName + ' ' + Users.LastName AS FullName
