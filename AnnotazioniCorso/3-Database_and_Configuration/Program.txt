@@ -2,10 +2,10 @@
 using System.Data;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using Dapper;
+using Dapper; //dotnet add package Dapper
 using HelloWorld3.Data;
 using HelloWorld3.Models;
-using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient; // dotnet add package microsoft.data.sqlclient
 using Microsoft.Extensions.Configuration;
 
 namespace HelloWorld3
