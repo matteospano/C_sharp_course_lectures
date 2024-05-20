@@ -67,6 +67,8 @@ UPDATE  TutorialAppSchema.Computer
  ALTER TABLE TutorialAppSchema.Computer ADD HasDvdReader BIT
 
  -- DELETE FROM TutorialAppSchema.Computer WHERE ReleaseDate > '2018-10-31'
+ -- WHERE ReleaseDate IN ('2018-10-25', '2018-10-31') non restituisce un range ma i valori specifici
+ -- nell'array, come se avessi fatto una query per ogni valore.
 --When we use BETWEEN we also include the Lower and Upper Bound of the value we're checking
 DELETE  FROM TutorialAppSchema.Computer WHERE  ComputerId BETWEEN 500 AND 1000; --501 Rows affected
 

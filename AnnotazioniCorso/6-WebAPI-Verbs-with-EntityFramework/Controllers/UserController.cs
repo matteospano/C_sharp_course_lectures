@@ -1,4 +1,3 @@
-//using sub.namespaces make sure only the needed ones are loaded into memory
 using DotnetAPI.Data;
 using DotnetAPI.Dtos;
 using DotnetAPI.Models;
@@ -23,18 +22,34 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("GetUsers")]
+    // public IEnumerable<User> GetUsers()
     public IEnumerable<User> GetUsers()
     {
-        //nota bene: la stringa sql non deve superare 4000 caratteri!
-        string sql = @"SELECT * FROM TutorialAppSchema.Users";
+        string sql = @"
+            SELECT [UserId],
+                [FirstName],
+                [LastName],
+                [Email],
+                [Gender],
+                [Active] 
+            FROM TutorialAppSchema.Users";
         IEnumerable<User> users = _dapper.LoadData<User>(sql);
         return users;
     }
 
     [HttpGet("GetSingleUser/{userId}")]
+    // public IEnumerable<User> GetUsers()
     public User GetSingleUser(int userId)
     {
-        string sql = @"SELECT * FROM TutorialAppSchema.Users WHERE UserId = " + userId.ToString();
+        string sql = @"
+            SELECT [UserId],
+                [FirstName],
+                [LastName],
+                [Email],
+                [Gender],
+                [Active] 
+            FROM TutorialAppSchema.Users
+                WHERE UserId = " + userId.ToString(); //"7"
         User user = _dapper.LoadDataSingle<User>(sql);
         return user;
     }
@@ -42,7 +57,6 @@ public class UserController : ControllerBase
     [HttpPut("EditUser")]
     public IActionResult EditUser(User user)
     {
-        //nota bene: anche i booleani vanno passati tra apici perchè così 'false' viene interpretato come BIT 0
         string sql = @"
         UPDATE TutorialAppSchema.Users
             SET [FirstName] = '" + user.FirstName + 
@@ -52,7 +66,7 @@ public class UserController : ControllerBase
                 "', [Active] = '" + user.Active + 
             "' WHERE UserId = " + user.UserId;
         
-        //Console.WriteLine(sql); copia e incolla il console log e runnalo da Azure Data Studio per capire l'errore specifico
+        Console.WriteLine(sql);
 
         if (_dapper.ExecuteSql(sql))
         {
@@ -66,7 +80,6 @@ public class UserController : ControllerBase
     [HttpPost("AddUser")]
     public IActionResult AddUser(UserToAddDto user)
     {
-        //nota bene: la INSERT non vuole i nomi delle colonne. E' sbagliato scrivere [FirstName] = '" + user.FirstName + ...
         string sql = @"INSERT INTO TutorialAppSchema.Users(
                 [FirstName],
                 [LastName],
@@ -81,7 +94,7 @@ public class UserController : ControllerBase
                 "', '" + user.Active + 
             "')";
         
-        //Console.WriteLine(sql);
+        Console.WriteLine(sql);
 
         if (_dapper.ExecuteSql(sql))
         {
@@ -98,7 +111,7 @@ public class UserController : ControllerBase
             DELETE FROM TutorialAppSchema.Users 
                 WHERE UserId = " + userId.ToString();
         
-        //Console.WriteLine(sql);
+        Console.WriteLine(sql);
 
         if (_dapper.ExecuteSql(sql))
         {
