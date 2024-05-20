@@ -74,7 +74,7 @@ public class UserEFController : ControllerBase
     [HttpPost("AddUser")]
     public IActionResult AddUser(UserToAddDto user)
     {
-        User userDb = _mapper.Map<User>(user);
+        User userDb = _mapper.Map<User>(user); //automapper for fields with the same name in both objects
         
         _entityFramework.Add(userDb);
         if (_entityFramework.SaveChanges() > 0)
