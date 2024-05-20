@@ -1,5 +1,8 @@
 per evitare confusioni ho trasformato i vari file .cs relativi ad ogni lezione in txt.
 Ogni versione del codice andrebbe copiata in un nuovo progetto vuoto e ritrascormato il file .cs prima di fare dotnet run
+Nuovo progetto:
+dotnet new console -n HelloWorld //console application
+dotnet new webapi -n DotnetAPI //webApi
 
 Json:
 /* json file to IEnumerable */
