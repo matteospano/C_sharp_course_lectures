@@ -80,8 +80,8 @@ SELECT  Users.UserId
           ON UserSalary.UserId = Users.UserId
       LEFT JOIN TutorialAppSchema.UserJobInfo AS UserJobInfo
           ON UserJobInfo.UserId = Users.UserId
-      -- OUTER APPLY ( -- Similar to LEFT JOIN, return results from the left table)
-      CROSS APPLY ( -- Similar to JOIN, return results from the intersection of tables)
+      -- OUTER APPLY ( -- Similar to LEFT JOIN, crea la matrice tra gli elementi di a e b, return results from the left table)
+      CROSS APPLY ( -- Similar to JOIN, crea la matrice tra gli elementi di a e b, return results from the intersection of tables)
                       -- SELECT TOP 1 
                       SELECT    ISNULL (UserJobInfo2.Department, 'No Department Listed') AS Deparment
                                 , AVG (UserSalary2.Salary) AS AvgSalary
