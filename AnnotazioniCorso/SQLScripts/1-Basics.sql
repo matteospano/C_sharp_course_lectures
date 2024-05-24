@@ -75,6 +75,9 @@ DELETE  FROM TutorialAppSchema.Computer WHERE  ComputerId BETWEEN 500 AND 1000; 
 --svuota tabella
 TRUNCATE TABLE TutorialAppSchema.Computer;
 
+/* ricerca LIKE, non è case sensitive */
+WHERE (Users.FirstName LIKE '%' + @SearchString + '%' OR Users.LastName LIKE '%' + @SearchString + '%')
+
 /* date functions */
 SELECT  GETDATE (); --return current time of the server
 SELECT  DATEADD (YEAR, -5, GETDATE ()); --add/subtract (type, number, from date)
