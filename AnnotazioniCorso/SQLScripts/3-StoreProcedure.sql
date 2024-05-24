@@ -91,6 +91,8 @@ BEGIN
         VALUES
             (@lastCreatedUserID, @Salary)
 
+    /* mostra risultato: */
+    EXEC TutorialAppSchema.sp_selectUsers @UserId=@lastCreatedUserID
     END
 
 
@@ -98,7 +100,7 @@ BEGIN
 ELSE --email presente-> edit user
 BEGIN
 
-        DECLARE @UserID INT = 
+        DECLARE @ExixtingUserID INT = 
         (SELECT UserID FROM Users WHERE Users.Email=@Email)
 
         UPDATE Users SET
@@ -106,28 +108,13 @@ FirstName=@FirstName,LastName=@LastName,Email=@Email,Gender=@Gender,Active=@Acti
 WHERE Users.Email=@Email
 
         UPDATE UserJobInfo SET JobTitle=@JobTitle,Department=@Department
-WHERE UserJobInfo.UserId=@UserID
+WHERE UserJobInfo.UserId=@ExixtingUserID
 
         UPDATE UserSalary SET Salary=@Salary
-WHERE UserSalary.UserId=@UserID
-
-    END
+WHERE UserSalary.UserId=@ExixtingUserID
 
     /* mostra risultato: */
-    --EXEC TutorialAppSchema.sp_selectUsers @UserId=1
-    SELECT Users.UserId
-        , Users.FirstName + ' ' + Users.LastName AS FullName
-        , UserJobInfo.JobTitle
-        , UserJobInfo.Department
-        , UserSalary.Salary
-        , Users.Email
-        , Users.Gender
-        , Users.Active
-    FROM TutorialAppSchema.Users AS Users
-        JOIN TutorialAppSchema.UserSalary AS UserSalary
-        ON UserSalary.UserId = Users.UserId
-        LEFT JOIN TutorialAppSchema.UserJobInfo AS UserJobInfo
-        ON UserJobInfo.UserId = Users.UserId
-    WHERE Users.Email= @Email
+    EXEC TutorialAppSchema.sp_selectUsers @UserId=@ExixtingUserID
+    END
 
 END
