@@ -1,3 +1,5 @@
+using System.Data;
+using Dapper;
 using DotnetAPI.Data;
 using DotnetAPI.Dtos;
 using DotnetAPI.Models;
@@ -26,23 +28,24 @@ public class UserCompleteController : ControllerBase
     // int userId=0 si può mettere un valore di default che verrà visualizzato nello Swagger
     {
         string sql = @"EXEC TutorialAppSchema.spUsers_Get";
-        string parameters = "";
+        string stringParameters = "";
+        DynamicParameters sqlParameters = new DynamicParameters();
         
         if (userId != 0)
         {
-            parameters += ", @UserId=" + userId.ToString();
-        }
+            stringParameters += ", @UserId=@UserIdParameter";
+            sqlParameters.Add("@UserIdParameter", userId, DbType.Int32 );
+        } 
         if (isActive)
         {
-            parameters += ", @Active=" + isActive.ToString();
+            stringParameters += ", @Active=@ActiveParameter";
+            sqlParameters.Add("@ActiveParameter", isActive, DbType.Boolean );
         }
 
-        if (parameters.Length > 0)
-        {
+        if (stringParameters.Length > 0)
             sql += parameters.TrimStart(','); //o Substring(1) rimuove la virgola iniziale
-        }
 
-        IEnumerable<UserComplete> users = _dapper.LoadData<UserComplete>(sql);
+        IEnumerable<UserComplete> users = _dapper.LoadDataWithParameters<UserComplete>(sql, sqlParameters);
         return users;
     }
     
@@ -50,35 +53,47 @@ public class UserCompleteController : ControllerBase
     public IActionResult UpdateOrInsert(UserComplete user)
     {
         string sql = @"EXEC TutorialAppSchema.spUser_Upsert
-            @FirstName = '" + user.FirstName + 
-            "', @LastName = '" + user.LastName +
-            "', @Email = '" + user.Email + 
-            "', @Gender = '" + user.Gender + 
-            "', @Active = '" + user.Active + 
-            "', @JobTitle = '" + user.JobTitle + 
-            "', @Department = '" + user.Department + 
-            "', @Salary = '" + user.Salary + 
-            "', @UserId = " + user.UserId;
+            @FirstName = @FirstNameParameter, 
+            @LastName = @LastNameParameter, 
+            @Email = @EmailParameter, 
+            @Gender = @GenderParameter, 
+            @Active = @ActiveParameter, 
+            @JobTitle = @JobTitleParameter, 
+            @Department = @DepartmentParameter, 
+            @Salary = @SalaryParameter, 
+            @UserId = @UserIdParameter";
+            //usando i DynamicParameters si è più protetti da attacchi sql
+            // inject perchè l'interpreter cerca il parametro, non una qualsiasi
+            //stringa di codice
 
-        if (_dapper.ExecuteSql(sql))
-        {
-            return Ok();
-        } 
+        DynamicParameters sqlParameters = new DynamicParameters();
 
-        throw new Exception("Failed to Update User");
+        sqlParameters.Add("@FirstNameParameter", user.FirstName, DbType.String);
+        sqlParameters.Add("@LastNameParameter", user.LastName, DbType.String);
+        sqlParameters.Add("@EmailParameter", user.Email, DbType.String);
+        sqlParameters.Add("@GenderParameter", user.Gender, DbType.String);
+        sqlParameters.Add("@ActiveParameter", user.Active, DbType.Boolean);
+        sqlParameters.Add("@JobTitleParameter", user.JobTitle, DbType.String);
+        sqlParameters.Add("@DepartmentParameter", user.Department, DbType.String);
+        sqlParameters.Add("@SalaryParameter", user.Salary, DbType.Decimal);
+        sqlParameters.Add("@UserIdParameter", user.UserId, DbType.Int32);
+
+        if (_dapper.ExecuteSqlWithParameters(sql, sqlParameters))
+             return Ok();
+        throw  new Exception("Failed to Update User");
     }
 
     [HttpDelete("DeleteUser/{userId}")]
     public IActionResult DeleteUser(int userId)
     {
         string sql = @"TutorialAppSchema.spUser_Delete
-            @UserId = " + userId.ToString();
+            @UserId = @UserIdParameter";
 
-        if (_dapper.ExecuteSql(sql))
-        {
+        DynamicParameters sqlParameters = new DynamicParameters();
+        sqlParameters.Add("@UserIdParameter", userId, DbType.Int32);
+
+        if (_dapper.ExecuteSqlWithParameters(sql, sqlParameters))
             return Ok();
-        } 
-
         throw new Exception("Failed to Delete User");
     }
 }
