@@ -36,7 +36,7 @@ public class UserCompleteController : ControllerBase
             stringParameters += ", @UserId=@UserIdParameter";
             sqlParameters.Add("@UserIdParameter", userId, DbType.Int32 );
         } 
-        if (isActive)
+        if (isActive===true || isActive===false)
         {
             stringParameters += ", @Active=@ActiveParameter";
             sqlParameters.Add("@ActiveParameter", isActive, DbType.Boolean );
