@@ -22,7 +22,6 @@ public class UserCompleteController : ControllerBase
     }
 
     [HttpGet("GetUsers/{userId}/{isActive}")]
-    // public IEnumerable<User> GetUsers()
     public IEnumerable<UserComplete> GetUsers(int userId=0, bool isActive)
     // int userId=0 si può mettere un valore di default che verrà visualizzato nello Swagger
     {

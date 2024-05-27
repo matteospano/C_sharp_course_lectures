@@ -86,7 +86,8 @@ namespace DotnetAPI.Controllers
             string sqlForHashAndSalt = @"EXEC TutorialAppSchema.spLoginConfirmation_Get 
                 @Email = @EmailParam";
 
-            DynamicParameters sqlParameters = new DynamicParameters();
+            DynamicParameters sqlParameters = new DynamicParameters(); // dobbiamo usare questa sorta di lista
+            // perche la List darebbe errore in una get
             sqlParameters.Add("@EmailParam", userForLogin.Email, DbType.String);
 
             UserForLoginConfirmationDto userForConfirmation = _dapper
