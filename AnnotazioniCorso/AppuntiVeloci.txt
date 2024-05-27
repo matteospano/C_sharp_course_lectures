@@ -15,3 +15,12 @@ JsonSerializerSettings settings = new JsonSerializerSettings()
 
 string computersCopyNewtonsoft = JsonConvert.SerializeObject(computersNewtonSoft, settings);
 File.WriteAllText(computersCopyNewtonsoft);
+
+C# con Store procedure:
+
+string sql= "EXEC TutotialAppSchema.getUsers";
+string parameters = "";
+
+if(UserId){ parameters += ", @UserId=" UserId};
+if(Active===true || Active===false){ parameters += ", @Active=" Active};
+parameters = parameters.TrimStart(','); //o Substring(1) rimuove la virgola iniziale
